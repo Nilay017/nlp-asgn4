@@ -23,6 +23,39 @@ Following are our results on CoNaLa dataset and Corpus BLEU
 
 Our best results are with SOTA model bootstrapped with Python standard library, Numpy, Pandas, and PyTorch library. During Sampling we do a probability pruning to stop some examples from getting unfair advantage over others. Moreover, we place a contraint of number of characters (120) in the intent.
 
+## Testing on HumanEval dataset
+Make sure to use python 3.7 or later:
+```
+conda create -n codex python=3.7
+conda activate codex
+```
+
+install the requirments:
+```
+pip install -e human-eval
+```
+
+Convert humanEval data to a form which can be used by TAE models:
+```
+cd human-eval
+python3 read_human_eval.py
+```
+
+Revert back to older conda environment (the one used for TAE)
+```
+conda deactivate
+cd ..
+```
+
+Generate code for humanEval data from our model
+```
+python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
+```
+
+Generate code for humanEval data from SOTA baseline model
+```
+python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
+```
 
 
 
@@ -58,41 +91,6 @@ To evaluate the provided CoNaLa chceckpoint:
 ```
 python3 train.py --dataset_name conala --save_dir pretrained_weights/conala --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 4
 ```
-
-### Testing on HumanEval dataset
-Make sure to use python 3.7 or later:
-```
-conda create -n codex python=3.7
-conda activate codex
-```
-
-install the requirments:
-```
-pip install -e human-eval
-```
-
-Convert humanEval data to a form which can be used by TAE models:
-```
-cd human-eval
-python3 read_human_eval.py
-```
-
-Revert back to older conda environment (the one used for TAE)
-```
-conda deactivate
-cd ..
-```
-
-Generate code for humanEval data from our model
-```
-python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
-```
-
-Generate code for humanEval data from SOTA baseline model
-```
-python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
-```
-
 
 ### Evaluation Results
 Here are the evaluation numbers for the provided checkpoints:
