@@ -47,14 +47,14 @@ conda deactivate
 cd ..
 ```
 
-Generate code for humanEval data from our model
+Test on humanEval data for our model
 ```
 python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
 ```
 
-Generate code for humanEval data from SOTA baseline model
+Test on humanEval for SOTA baseline model. **Note**: first, the user will need to copy the weights file from the pretrained_weights/conala folder in the [original TAE repo](https://github.com/BorealisAI/code-gen-TAE) to this repositories pretrained_weights/conala folder. The file wasn't added to this repo due to github size restrictions
 ```
-python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
+python3 test_humanEval.py --dataset_name conala --save_dir pretrained_weights/conala --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 4
 ```
 Currently, both our best model and the SOTA baseline give 0% accuracy on HumanEval dataset
 
