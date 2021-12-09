@@ -47,15 +47,16 @@ conda deactivate
 cd ..
 ```
 
-Generate code for humanEval data from our model
+Test on humanEval data for our model
 ```
-python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
+python3 test_humanEval.py --dataset_name conala --save_dir our_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
 ```
 
-Generate code for humanEval data from SOTA baseline model
+Test on humanEval for SOTA baseline model. **Note**: first, the user will need to copy the weights file from the pretrained_weights/conala folder in the [original TAE repo](https://github.com/BorealisAI/code-gen-TAE) to this repositories pretrained_weights/conala folder. The file wasn't added to this repo due to github size restrictions
 ```
-python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
+python3 test_humanEval.py --dataset_name conala --save_dir pretrained_weights/conala --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 4
 ```
+Currently, both our best model and the SOTA baseline give 0% accuracy on HumanEval dataset
 
 # Original Paper
 ## Code generation from natural language with less prior and more monolingual data (TAE)
@@ -97,50 +98,3 @@ Here are the evaluation numbers for the provided checkpoints (SOTA Baseline):
 | ------- | ------------ | ------------------ |
 | Django  | 81.77        | Exact Match Acc.   |
 | CoNaLa  | 33.41        | Corpus BLEU        |
-
-
-### Testing on HumanEval dataset
-Make sure to use python 3.7 or later:
-```
-cd human-eval
-conda create -n codex python=3.7
-conda activate codex
-```
-
-Install the requirments:
-```
-pip install -e human-eval
-```
-
-Convert humanEval data to a form which can be used by TAE models:
-```
-python3 read_human_eval.py
-```
-
-Revert back to older conda environment (the one used for TAE)
-```
-conda deactivate
-cd ..
-```
-
-Generate code for humanEval data from our model
-```
-python3 test_humanEval.py --dataset_name conala --save_dir saved_models/ --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1 --beam_num 50
-```
-Compute pass@k metric for our model for k=1,2,5,10,20,30,40,50
-```
-cd human-eval
-evaluate_functional_correctness ../data/humanEval/out/test_beam_out.json --k=1,2,5,10,20,30,40,50
-```
-
-
-Generate code for humanEval data from SOTA baseline model
-```
-python3 test_humanEval.py --dataset_name conala --save_dir pretrained_weights/conala --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 4 --beam_num 50
-```
-Compute pass@k metric for our model for k=1,2,5,10,20,30,40,50
-```
-cd human-eval
-evaluate_functional_correctness ../data/humanEval/out/test_beam_out.json --k=1,2,5,10,20,30,40,50
-```
-Currently, both SOTA baseline and our model give 0% accuracy on HumanEval dataset 
