@@ -115,10 +115,10 @@ def compute_bleu(translation_corpus, dataset_object, section, args, max_order=4,
         else:
             reference = dataset_object[index]['snippet']
 
-        print("--------- B -----------")
-        print(dataset_object[index])
-        print("Generated  translation")
-        print(translation)
+        # print("--------- B -----------")
+        # print(dataset_object[index])
+        # print("Generated  translation")
+        # print(translation)
 
         if args.python is True and args.translate_backward is False:
             slot_map = dataset_object[index]['slot_map']
@@ -185,3 +185,39 @@ def compute_bleu(translation_corpus, dataset_object, section, args, max_order=4,
     bleu = geo_mean * bp
     return bleu, bleu_sentence/len(section)
 
+def out_beam_act(translation_corpus, dataset_object, section, args, max_order=4, smooth=False):
+    matches_by_order = [0] * max_order
+    possible_matches_by_order = [0] * max_order
+    reference_length = 0
+    translation_length = 0
+    bleu_sentence = 0
+
+    # print(len(translation_corpus))
+    # print(len(translation_corpus[0]))
+    # print(len(translation_corpus[0][0]))
+    for index in section:
+        while(len(translation_corpus[index]) != args.beam_num):
+            translation_corpus[index].append(translation_corpus[index][0])
+        for translation in translation_corpus[index]:
+            if args.translate_backward:
+                reference = ' '.join(dataset_object[index]['intent']['words'])
+            else:
+                reference = dataset_object[index]['snippet']
+                
+            if args.python is True and args.translate_backward is False:
+                slot_map = dataset_object[index]['slot_map']
+                ref = Conala.decanonicalize_code(reference, slot_map)
+                # for i in range(len(translation)):
+                var0 = Conala.decanonicalize_code(translation['str'], slot_map)
+                hype = remove_spaces(var0, dataset_object[index]['intent'])
+                if(args.save_test_out == 1):
+                    # with open(args.save_test_file, 'a') as file:
+                    #     file.write(json.dumps({"NL input" : dataset_object[index]['intent']['words'], 
+                    #                             "expected code" : dataset_object[index]['snippet'], 
+                    #                             "generated code" : var0}))
+                    # print("ID is : ", args.test_id)
+                    curr_test_out = {}
+                    curr_test_out["task_id"] = "HumanEval/" + str(args.test_id)
+                    curr_test_out["completion"] = var0
+                    args.list_test_outs.append(curr_test_out)
+        args.test_id += 1
