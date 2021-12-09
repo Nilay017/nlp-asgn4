@@ -23,6 +23,12 @@ Following are our results on CoNaLa dataset and Corpus BLEU
 
 Our best results are with SOTA model bootstrapped with Python standard library, Numpy, Pandas, and PyTorch library. During Sampling we do a probability pruning to stop some examples from getting unfair advantage over others. Moreover, we place a contraint of number of characters (120) in the intent.
 
+To evaluate our models
+```python3 train.py --dataset_name conala --save_dir our_models/conala --copy_bt --no_encoder_update --monolingual_ratio 0.5 --epochs 80 --just_evaluate --seed 1
+```
+**Note** - The code may complain file not found error. That's because the testing script is looking for a file with specific name. In that case, just rename our model file present in our_models/ directory to whatever the testing script requires.
+
+
 ### Evaluation Results of the original paper
 Here are the evaluation numbers for the provided checkpoints (SOTA Baseline):
 
